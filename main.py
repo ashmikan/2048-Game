@@ -46,6 +46,7 @@ class Tile:
 
     def get_color(self):
         color_index = int(math.log2(self.value)) - 1
+        color_index = max(0, min(color_index, len(self.COLORS) - 1))
         color = self.COLORS[color_index]
         return color
 
@@ -58,7 +59,7 @@ class Tile:
             text,
             (
                 self.x + (RECT_WIDTH / 2 - text.get_width() / 2) ,
-                self.y + (RECT_HEIGHT / 2 - text.get_height() / 2), 
+                self.y + (RECT_HEIGHT / 2 - text.get_height() / 2) , 
             ),
         )
 
@@ -102,7 +103,7 @@ def get_random_pos(tiles):
         row = random.randrange(0, ROWS)
         col = random.randrange(0, COLS)
 
-        if f"{row}{col}" not in tiles:
+        if f"{row} {col}" not in tiles:
             break
 
     return row, col
@@ -201,14 +202,14 @@ def end_move(tiles):
         return "lost"
 
     row, col = get_random_pos(tiles)
-    tiles[f"{row}{col}"] = Tile(random.choice([2, 4]), row, col)
+    tiles[f"{row} {col}"] = Tile(random.choice([2, 4]), row, col)
     return "continue"
 
 
 def update_tiles(window, tiles, sorted_tiles):
     tiles.clear()
     for tile in sorted_tiles:
-        tiles[f"{tile.row}{tile.col}"] = tile
+        tiles[f"{tile.row} {tile.col}"] = tile
 
     draw(window, tiles)
 
@@ -216,7 +217,7 @@ def generate_tiles():
     tiles = {}
     for _ in range(2):
         row, col = get_random_pos(tiles)
-        tiles[f"{row}{col}"] = Tile(2, row, col)
+        tiles[f"{row} {col}"] = Tile(2, row, col)
 
     return tiles
 
@@ -244,6 +245,10 @@ def main(window):
                 elif event.key == pygame.K_DOWN:
                     status = move_tiles(window, tiles, clock, "down")
                 
+                if status == "lost":
+                    print("Game Over!")
+                    run = False
+                    break
 
         draw(window, tiles)
 
