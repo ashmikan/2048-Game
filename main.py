@@ -24,6 +24,50 @@ MOVE_VEL = 20
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("2048 Game")
 
+class Title:
+    COLORS = [
+        (238, 228, 238),
+        (237, 224, 220),
+        (242, 177, 121),
+        (245, 149, 199),
+        (246, 124, 195),
+        (246, 94, 159),
+        (237, 207, 114),
+        (237, 204, 197),
+        (237, 200, 180)
+    ]
+
+    def __init__(self, value, row, col):
+        self.value = value
+        self.row = row
+        self.col = col
+        self.x = col * RECT_WIDTH
+        self.y = row * RECT_HEIGHT
+
+    def get_color(self):
+        color_index = int(math.log2(self.value)) - 1
+        color = self.COLORS[color_index]
+        return color
+
+    def draw(self, window):
+        color = self.get_color()
+        pygame.draw.rect(window, color, (self.x, self.y, RECT_WIDTH, RECT_HEIGHT))
+
+        text = FONT.render(str(self.value), 1, TEXT_COLOR)
+        window.blit(
+            text,
+            (
+                self.x + (RECT_WIDTH / 2 - text.get_width() / 2) ,
+                self.y + (RECT_HEIGHT / 2 - text.get_height() / 2) 
+            ),
+        )
+
+    def set_pos(self):
+        pass
+
+    def move(self, delta):
+        pass
+
 def draw_grid(window):
     for row in range(1, ROWS):
         y = row * RECT_HEIGHT
@@ -35,8 +79,11 @@ def draw_grid(window):
 
     pygame.draw.rect(window, OUTLINE_COLOR, (0, 0, WIDTH, HEIGHT), OUTLINE_THICKNESS)
 
-def draw(window):
+def draw(window, tiles):
     window.fill(BACKGROUND_COLOR)
+
+    for tile in tiles.values():
+        tile.draw(window)
 
     draw_grid(window)
 
@@ -46,6 +93,8 @@ def main(window):
     clock = pygame.time.Clock()
     run = True
 
+    tiles = {"00": Title(4, 0, 0), "02": Title(128, 2, 0)}  
+
     while run:
         clock.tick(FPS)
 
@@ -54,7 +103,7 @@ def main(window):
                 run = False
                 break
 
-        draw(window)
+        draw(window, tiles)
 
     pygame.quit()
 
