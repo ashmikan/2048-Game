@@ -6,7 +6,7 @@ pygame.init()
 
 FPS = 60
 
-WIDTH, HEIGHT = 600, 600
+WIDTH, HEIGHT = 800, 800
 ROWS = 4
 COLS = 4
 
@@ -34,7 +34,7 @@ class Tile:
         (246, 94, 159),
         (237, 207, 114),
         (237, 204, 197),
-        (237, 200, 180)
+        (237, 200, 180),
     ]
 
     def __init__(self, value, row, col):
@@ -58,7 +58,7 @@ class Tile:
             text,
             (
                 self.x + (RECT_WIDTH / 2 - text.get_width() / 2) ,
-                self.y + (RECT_HEIGHT / 2 - text.get_height() / 2) 
+                self.y + (RECT_HEIGHT / 2 - text.get_height() / 2), 
             ),
         )
 
@@ -102,7 +102,7 @@ def get_random_pos(tiles):
         row = random.randrange(0, ROWS)
         col = random.randrange(0, COLS)
 
-        if f"{row} {col}" not in tiles:
+        if f"{row}{col}" not in tiles:
             break
 
     return row, col
@@ -192,7 +192,7 @@ def move_tiles(window, tiles, clock, direction):
             tile.set_pos(ceil)
             updated = True
 
-        update_tiles (window, tiles, sorted_tiles)
+        update_tiles(window, tiles, sorted_tiles)
 
     return end_move(tiles)
 
@@ -201,14 +201,14 @@ def end_move(tiles):
         return "lost"
 
     row, col = get_random_pos(tiles)
-    tiles[f"{row} {col}"] = Tile(random.choice([2, 4]), row, col)
+    tiles[f"{row}{col}"] = Tile(random.choice([2, 4]), row, col)
     return "continue"
 
 
 def update_tiles(window, tiles, sorted_tiles):
     tiles.clear()
     for tile in sorted_tiles:
-        tiles[f"{tile.row} {tile.col}"] = tile
+        tiles[f"{tile.row}{tile.col}"] = tile
 
     draw(window, tiles)
 
@@ -216,7 +216,7 @@ def generate_tiles():
     tiles = {}
     for _ in range(2):
         row, col = get_random_pos(tiles)
-        tiles[f"{row} {col}"] = Tile(2, row, col)
+        tiles[f"{row}{col}"] = Tile(2, row, col)
 
     return tiles
 
@@ -244,10 +244,6 @@ def main(window):
                 elif event.key == pygame.K_DOWN:
                     status = move_tiles(window, tiles, clock, "down")
                 
-                if status == "lost":
-                    print("Game Over!")
-                    run = False
-                    break
 
         draw(window, tiles)
 
