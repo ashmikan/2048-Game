@@ -15,7 +15,7 @@ RECT_HEIGHT = HEIGHT // ROWS
 
 OUTLINE_COLOR = (187, 173, 160)
 OUTLINE_THICKNESS = 10
-BACKGROUND_COLOR = (205, 192, 180)
+BACKGROUND_COLOR = (225, 192, 180)
 TEXT_COLOR = (119, 110, 101)
 
 FONT = pygame.font.SysFont("comicsans", 60, bold=True)
@@ -23,6 +23,10 @@ MOVE_VEL = 20
 
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("2048 Game")
+
+def draw(window):
+    window.fill(BACKGROUND_COLOR)
+    pygame.display.update()
 
 def main(window):
     clock = pygame.time.Clock()
@@ -35,6 +39,8 @@ def main(window):
             if event.type == pygame.QUIT:
                 run = False
                 break
+
+        draw(window)
 
     pygame.quit()
 
